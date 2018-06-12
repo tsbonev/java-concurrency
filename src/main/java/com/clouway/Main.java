@@ -1,16 +1,41 @@
 package com.clouway;
 
-public class Main implements Runnable {
+import java.util.Scanner;
+
+public class Main {
 
 
-    @Override
-    public void run() {
-        System.out.println("Hello from a thread!");
+    private static int count = 0;
+
+    public static class Counter implements Runnable{
+
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    Thread.sleep(100);
+                    count++;
+                } catch (InterruptedException e) {
+                }
+
+            }
+        }
     }
 
-    public static void main(String[] args){
 
-        (new Thread(new Main())).start();
+
+    public static void main(String[] args) {
+
+        Thread thread = new Thread(new Counter());
+
+        thread.start();
+
+        Scanner scanner = new Scanner(System.in);
+
+        if (scanner.next() != null) {
+            thread.interrupt();
+            System.out.println(count);
+        }
 
     }
 
