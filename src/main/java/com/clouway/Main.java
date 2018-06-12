@@ -8,22 +8,26 @@ public class Main {
 
         private int count = 0;
         private int limit;
+        private final String name;
 
-        public Counter(int limit){
+        public Counter(int limit, String name){
+            this.name = name;
             this.limit = limit;
         }
 
         @Override
         public void run() {
-            while (count <= limit) {
+
+            while (count < limit) {
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(100);
                     count++;
+                    System.out.println(name + " is at : " + count);
                 } catch (InterruptedException e) {
-                    System.out.println("I was interrupetd at " + count);
+                    System.out.println(name + " was interrupted at " + count);
                 }
             }
-            System.out.println("I finished counting to " + limit);
+            System.out.println(name + " finished counting to " + limit);
         }
     }
 
@@ -31,17 +35,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Counter counter = new Counter(30);
+        Counter counter1 = new Counter(30, "First thread");
+        Counter counter2 = new Counter(15, "Second thread");
 
-        Thread thread = new Thread(counter);
-        thread.start();
+        Thread thread1 = new Thread(counter1);
+        Thread thread2 = new Thread(counter2);
 
-        Scanner scanner = new Scanner(System.in);
-
-        if (scanner.next() != null) {
-            thread.interrupt();
-        }
-
+        thread1.start();
+        thread2.start();
     }
 
 }
