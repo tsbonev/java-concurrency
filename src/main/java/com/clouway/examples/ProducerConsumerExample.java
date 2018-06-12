@@ -1,10 +1,20 @@
 package com.clouway.examples;
 
+import com.oracle.jrockit.jfr.Producer;
+
 import java.util.Random;
 
-public class Synchronization {
 
-    public class Drop {
+public class ProducerConsumerExample {
+
+
+    public static void main(String[] args){
+        Drop drop = new Drop();
+        (new Thread(new Producer(drop))).start();
+        (new Thread(new Consumer(drop))).start();
+    }
+
+    public static class Drop {
 
         // Message sent from producer
         // to consumer.
@@ -55,7 +65,7 @@ public class Synchronization {
     }
 
 
-    public class Producer implements Runnable{
+    public static class Producer implements Runnable{
         private Drop drop;
 
         public Producer(Drop drop){
@@ -83,7 +93,7 @@ public class Synchronization {
 
     }
 
-    public class Consumer implements Runnable{
+    public static class Consumer implements Runnable{
 
         private Drop drop;
 
@@ -95,7 +105,7 @@ public class Synchronization {
         public void run() {
             Random random = new Random();
             for(String message = drop.take(); ! message.equals("DONE"); message = drop.take()){
-                
+
                 System.out.format("MESSAGE RECEIVED: %s%n", message);
                 try {
                     Thread.sleep(random.nextInt(5000));
@@ -104,5 +114,6 @@ public class Synchronization {
             }
         }
     }
-    
+
+
 }

@@ -1,4 +1,4 @@
-package com.clouway;
+package com.clouway.examples;
 
 public class SimpleThreads {
 
