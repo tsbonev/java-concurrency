@@ -37,6 +37,10 @@ public class Main {
                     count++;
                     System.out.println(Thread.currentThread().getName() + " is at : " + count);
 
+                    if(count == limit){
+                        break;
+                    }
+
                     notifyAll();
                     wait(1000);
 
@@ -57,14 +61,14 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException {
 
-        Counter counter1 = new Counter(7);
-        Counter counter2 = new Counter(15);
+        Counter counter1 = new Counter(15);
+        Counter counter2 = new Counter(7);
 
         Thread thread1 = new Thread(counter1);
         Thread thread2 = new Thread(counter2);
 
         thread1.start();
-        Thread.currentThread().sleep(100);
+        Thread.currentThread().sleep(200);
         thread2.start();
 
 
