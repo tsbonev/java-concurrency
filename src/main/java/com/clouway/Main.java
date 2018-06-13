@@ -1,60 +1,73 @@
 package com.clouway;
 
-
 public class Main {
 
     static boolean isFinished = false;
+
+    public static synchronized boolean getIsFinished() {
+        return isFinished;
+    }
+
+    public static synchronized void setIsFinished(boolean signal) {
+        isFinished = signal;
+    }
+
 
     public static class Counter implements Runnable {
 
         private int count = 0;
         private int limit;
-        private final String name;
 
-        public Counter(int limit, String name) {
-            this.name = name;
+        public Counter(int limit) {
             this.limit = limit;
         }
 
         @Override
-        public void run() {
+        public synchronized void run() {
 
             while (count < limit) {
 
-                if (isFinished) {
-                    Thread.currentThread().interrupt();
-                }
-
                 try {
-                    Thread.sleep(100);
-                    count++;
-                    System.out.println(name + " is at : " + count);
+                    if (getIsFinished()) {
+                        throw new InterruptedException();
+                    }
 
+                    Thread.currentThread().sleep((long) (Math.random() * 100));
+
+                    count++;
+                    System.out.println(Thread.currentThread().getName() + " is at : " + count);
+
+                    notifyAll();
+                    wait(1000);
 
                 } catch (InterruptedException e) {
-                    System.out.println(name + " was interrupted at " + count);
+                    System.out.println(Thread.currentThread().getName() + " was interrupted at " + count);
                     return;
                 }
             }
 
-            isFinished = true;
-            System.out.println(name + " finished counting to " + limit);
+            setIsFinished(true);
+            System.out.println(Thread.currentThread().
+                    getName() + " finished counting to " + limit);
 
         }
 
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
-        Counter counter1 = new Counter(6, "First thread");
-        Counter counter2 = new Counter(5, "Second thread");
+        Counter counter1 = new Counter(7);
+        Counter counter2 = new Counter(15);
 
         Thread thread1 = new Thread(counter1);
         Thread thread2 = new Thread(counter2);
 
         thread1.start();
+        Thread.currentThread().sleep(100);
         thread2.start();
+
+
     }
 
 }
