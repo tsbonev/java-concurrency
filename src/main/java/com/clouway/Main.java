@@ -32,7 +32,7 @@ public class Main {
                         throw new InterruptedException();
                     }
 
-                    Thread.currentThread().sleep((long) (Math.random() * 100));
+                    //Thread.currentThread().sleep((long) (Math.random() * 100));
 
                     count++;
                     System.out.println(Thread.currentThread().getName() + " is at : " + count);
@@ -68,7 +68,7 @@ public class Main {
         Thread thread2 = new Thread(counter2);
 
         thread1.start();
-        Thread.currentThread().sleep(200);
+        Thread.currentThread().sleep(1);
         thread2.start();
 
 
