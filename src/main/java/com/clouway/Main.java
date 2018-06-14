@@ -59,7 +59,7 @@ public class Main {
                     next.setHasRun(false);
 
                     if(getIsFinished()){
-                        System.out.println(Thread.currentThread().getName() + " was interrupted at " + count);
+                       System.out.println(Thread.currentThread().getName() + " was interrupted at " + count);
                         return;
                     }
 
@@ -84,7 +84,7 @@ public class Main {
     }
 
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 
         Counter counter1 = new Counter(15);
         Counter counter2 = new Counter(7);
