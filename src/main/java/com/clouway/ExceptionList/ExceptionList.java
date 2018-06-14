@@ -8,43 +8,54 @@ public class ExceptionList {
     ArrayList<Object> attributes;
     static final int SIZE = 1;
 
-    public ExceptionList(){
-        this.attributes = new ArrayList<Object>(SIZE);
+    private synchronized int getSize(){
+        return attributes.size();
     }
 
-    public void Add(Object obj){
-        try{
-            if(attributes.size() + 1 > SIZE){
-                throw new IndexOutOfBoundsException();
+    public ExceptionList() {
+        this.attributes = new ArrayList<>(SIZE);
+    }
+
+    public synchronized void add(Object obj) {
+
+        try {
+            while (getSize() + 1 > SIZE) {
+                System.out.println(Thread.currentThread().getName() + " Waiting for elem to be removed");
+                wait();
             }
             attributes.add(obj);
-            System.out.println("Successfully added " + obj);
+            System.out.println(Thread.currentThread().getName() + " Successfully added " + obj);
+
+            notifyAll();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        catch (IndexOutOfBoundsException e){
-            System.out.println("Caught exception: " + e);
-        }
+
     }
 
-    public void Remove(){
-        try{
-            if(attributes.size() == 0){
-                throw new EmptyStackException();
+    public synchronized void remove() {
+
+        try {
+            while (getSize() == 0) {
+                System.out.println(Thread.currentThread().getName() + " Waiting for elem to be added");
+                wait();
             }
-            System.out.println("Successfully removed " + attributes.get(attributes.size() - 1));
+            System.out.println(Thread.currentThread().getName() + " Successfully removed " + attributes.get(attributes.size() - 1));
+
+            notifyAll();
             attributes.remove(attributes.get(attributes.size() - 1));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        catch (EmptyStackException e){
-            System.out.println("Caught exception: " + e);
-        }
+
     }
 
-    public void printAllElements(){
+    public synchronized void printAllElements() {
         for (Object obj : attributes
-             ) {
+                ) {
             System.out.println(obj);
         }
     }
-
 
 
 }
