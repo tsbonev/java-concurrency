@@ -2,6 +2,9 @@ package com.clouway;
 
 import com.clouway.ExceptionList.ExceptionList;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Main {
 
@@ -53,7 +56,6 @@ public class Main {
                 }
             }
 
-
         }
 
     }
@@ -63,25 +65,22 @@ public class Main {
 
         ExceptionList list = new ExceptionList();
 
-        Adder adder1 = new Adder();
-        Adder adder2 = new Adder();
-        adder1.setList(list);
-        adder2.setList(list);
 
-        Remover remover1 = new Remover();
-        Remover remover2 = new Remover();
-        remover1.setList(list);
-        remover2.setList(list);
+        List<Thread> threads = new ArrayList<>();
 
-        Thread thread1 = new Thread(adder1);
-        Thread thread2 = new Thread(adder2);
-        Thread thread3 = new Thread(remover1);
-        Thread thread4 = new Thread(remover2);
 
-        thread1.start();
-        thread2.start();
-        thread3.start();
-        thread4.start();
+        for(int i = 0; i < 2; i++){
+            Adder adder = new Adder();
+            Remover remover = new Remover();
+            adder.setList(list);
+            remover.setList(list);
+            threads.add(new Thread(adder));
+            threads.add(new Thread(remover));
+        }
+
+        for (Thread t : threads) {
+            t.start();
+        }
 
     }
 
