@@ -34,8 +34,15 @@ public class TimeoutHashtable<K, T> {
     }
 
     public void put(K key, T value){
+
+        if(hashtable.containsKey(key)) {
+            refreshTimeout(key);
+        }else {
+            timeout.put(key, getTimeoutThread(key));
+        }
+
         hashtable.put(key, value);
-        timeout.put(key, getTimeoutThread(key));
+
     }
 
     public T get (K key){
